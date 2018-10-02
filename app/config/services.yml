@@ -29,6 +29,13 @@ services:
         public: true
         tags: ['controller.service_arguments']
 
+    admin.race:
+      class: AppBundle\Admin\RaceAdmin
+      arguments: [~, AppBundle\Entity\Race, ~]
+      tags:
+      - { name: sonata.admin, manager_type: orm, label: Race }
+      public: true
+
     # add more services, or override services that need manual wiring
     # AppBundle\Service\ExampleService:
     #     arguments:

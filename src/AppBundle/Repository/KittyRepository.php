@@ -9,9 +9,9 @@
 namespace AppBundle\Repository;
 
 
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\EntityRepository;
 
-class KittyRepository extends ServiceEntityRepository
+class KittyRepository extends EntityRepository
 {
 
 }

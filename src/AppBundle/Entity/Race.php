@@ -69,10 +69,6 @@ class Race
         $this->raceName = $raceName;
     }
 
-    public function __toString()
-    {
-        return $this->getRaceName();
-    }
 
 
 }

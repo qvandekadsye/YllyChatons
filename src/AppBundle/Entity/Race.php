@@ -56,7 +56,7 @@ class Race
     /**
      * @return string
      */
-    public function getRaceName()
+    public function getRaceName(): ?string
     {
         return $this->raceName;
     }
@@ -69,6 +69,15 @@ class Race
         $this->raceName = $raceName;
     }
 
+    public function __toString()
+    {
+        if($this->getRaceName() !== null)
+        {
+            return $this->getRaceName();
+        }
+        else
+            return '';
+    }
 
 
 }

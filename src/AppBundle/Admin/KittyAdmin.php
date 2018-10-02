@@ -34,7 +34,7 @@ class KittyAdmin extends AbstractAdmin
         $listMapper->addIdentifier('id');
         $listMapper->addIdentifier('name');
         $listMapper->addIdentifier('birthday');
-        $listMapper->addIdentifier('race','array');
+        $listMapper->addIdentifier('race','string');
 
 
     }

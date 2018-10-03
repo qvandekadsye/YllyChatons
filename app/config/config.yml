@@ -9,6 +9,8 @@ parameters:
     locale: en
 
 framework:
+    templating:
+     engines: ['twig']
     #esi: ~
     translator: { fallbacks: ['%locale%'] }
     secret: '%secret%'
@@ -52,11 +54,17 @@ doctrine:
         #   2. Uncomment database_path in parameters.yml.dist
         #   3. Uncomment next line:
         #path: '%database_path%'
+        types:
+          json: Sonata\Doctrine\Types\JsonType
 
     orm:
-        auto_generate_proxy_classes: '%kernel.debug%'
-        naming_strategy: doctrine.orm.naming_strategy.underscore
-        auto_mapping: true
+      auto_generate_proxy_classes: '%kernel.debug%'
+      naming_strategy: doctrine.orm.naming_strategy.underscore
+      auto_mapping: true
+      mappings:
+        SonataUserBundle: ~
+        FOSUserBundle: ~
+
 
 # Swiftmailer Configuration
 swiftmailer:
@@ -70,8 +78,37 @@ sensio_framework_extra:
    router:
         annotations: false
 
+
+
+
 sonata_block:
   blocks:
     # enable the SonataAdminBundle block
     sonata.admin.block.admin_list:
       contexts: [admin]
+    sonata.user.block.menu:    # used to display the menu in profile pages
+    sonata.user.block.account: # used to display menu option (login option)
+    sonata.block.service.text: # used to if you plan to use Sonata user routes
+
+fos_user:
+  db_driver:      orm # can be orm or odm
+  firewall_name:  main
+  user_class:     Application\Sonata\UserBundle\Entity\User
+  from_email:
+    address: "%mailer_user%"
+    sender_name: "%mailer_user%"
+
+
+  group:
+    group_class:   Application\Sonata\UserBundle\Entity\Group
+    group_manager: sonata.user.orm.group_manager                    # If you're using doctrine orm (use sonata.user.mongodb.group_manager for mongodb)
+
+  service:
+    user_manager: sonata.user.orm.user_manager
+
+sonata_user:
+  security_acl: true
+  manager_type: orm
+  class:
+    user: Application\Sonata\UserBundle\Entity\User
+    group: Application\Sonata\UserBundle\Entity\Group

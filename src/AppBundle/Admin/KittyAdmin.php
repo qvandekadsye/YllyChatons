@@ -48,14 +48,10 @@ class KittyAdmin extends AbstractAdmin
         $showMapper->add('birthday');
         $showMapper->add('race');
         $showMapper->add('image', null, array('template' =>'@SonataMedia/kitty_show_field.html.twig'));
-
-
     }
 
     public function getExportFields()
     {
         return array('name', 'birthday','image','race');
     }
-
-
 }

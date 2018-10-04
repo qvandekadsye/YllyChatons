@@ -7,6 +7,7 @@
  */
 
 namespace AppBundle\Entity;
+
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -134,9 +135,4 @@ class Kitty
     {
         $this->race = $race;
     }
-
-
-
-
-
 }

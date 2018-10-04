@@ -71,13 +71,10 @@ class Race
 
     public function __toString()
     {
-        if($this->getRaceName() !== null)
-        {
+        if ($this->getRaceName() !== null) {
             return $this->getRaceName();
-        }
-        else
+        } else {
             return '';
+        }
     }
-
-
 }

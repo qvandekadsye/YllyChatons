@@ -9,6 +9,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Class Kitty
@@ -37,6 +38,7 @@ class Kitty
     /**
      * @ORM\Column(name="birthday",nullable=false, type="date")
      * @var /Date
+     * @Assert\NotNull()
      */
     protected $birthday;
 
@@ -46,12 +48,14 @@ class Kitty
      */
     protected $image;
 
+
     /**
      * @ORM\ManyToOne(targetEntity="Race",inversedBy="kitties")
+     * @ORM\JoinColumn(name="race_id", referencedColumnName="id", nullable=false)
      * @var Race
+     * @Assert\NotNull()
      */
     protected $race;
-
 
 
     /**

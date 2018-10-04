@@ -52,5 +52,10 @@ class KittyAdmin extends AbstractAdmin
 
     }
 
+    public function getExportFields()
+    {
+        return array('name', 'birthday','image','race');
+    }
+
 
 }

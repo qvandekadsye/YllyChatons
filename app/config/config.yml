@@ -155,5 +155,5 @@ sonata_media:
       create:     false
   class:
     media: Application\Sonata\MediaBundle\Entity\Media
-    gallery: Application\Sonata\MediaBundle\Entity\Gallery
-    gallery_has_media: Application\Sonata\MediaBundle\Entity\GalleryHasMedia
+    gallery: Sonata\MediaBundle\Entity\BaseGallery
+    gallery_has_media: Sonata\MediaBundle\Entity\BaseGalleryHasMedia

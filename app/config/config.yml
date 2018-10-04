@@ -63,10 +63,6 @@ doctrine:
       auto_generate_proxy_classes: '%kernel.debug%'
       naming_strategy: doctrine.orm.naming_strategy.underscore
       auto_mapping: true
-      mappings:
-        SonataUserBundle: ~
-        FOSUserBundle: ~
-        SonataMediaBundle: ~
 
 
 # Swiftmailer Configuration
@@ -80,9 +76,6 @@ swiftmailer:
 sensio_framework_extra:
    router:
         annotations: false
-
-
-
 
 sonata_block:
   blocks:

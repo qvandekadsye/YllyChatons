@@ -15,6 +15,3 @@
 !var/SymfonyRequirements.php
 /vendor/
 /web/bundles/
-.idea/*
-.php_cs.cache
-/web/uploads

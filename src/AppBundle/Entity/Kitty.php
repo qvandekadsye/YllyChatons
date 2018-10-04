@@ -18,7 +18,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Kitty
 {
-    const SERVER_PATH_TO_IMAGE_FOLDER = '/images';
+
 
     /**
      * @ORM\Column(type="integer")
@@ -40,10 +40,10 @@ class Kitty
     protected $birthday;
 
     /**
-     * @ORM\Column(name="imageFileName",type="string",nullable=true, length=255)
-     * @var string
+     * @ORM\OneToOne(targetEntity="\Application\Sonata\MediaBundle\Entity\Media", cascade={"persist"}, fetch="LAZY")
+     * @var \Application\Sonata\MediaBundle\Entity\Media
      */
-    protected $imageFileName;
+    protected $image;
 
     /**
      * @ORM\ManyToOne(targetEntity="Race",inversedBy="kitties")
@@ -51,7 +51,7 @@ class Kitty
      */
     protected $race;
 
-    protected $file;
+
 
     /**
      * @return int
@@ -102,20 +102,22 @@ class Kitty
     }
 
     /**
-     * @return string
+     * @return \Application\Sonata\MediaBundle\Entity\Media
      */
-    public function getImageFileName()
+    public function getImage()
     {
-        return $this->imageFileName;
+        return $this->image;
     }
 
     /**
-     * @param string $imageFileName
+     * @param \Application\Sonata\MediaBundle\Entity\Media $image
      */
-    public function setImageFileName($imageFileName)
+    public function setImage($image)
     {
-        $this->imageFileName = $imageFileName;
+        $this->image = $image;
     }
+
+
 
     /**
      * @return Race
@@ -133,49 +135,8 @@ class Kitty
         $this->race = $race;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getFile()
-    {
-        return $this->file;
-    }
 
-    /**
-     * @param mixed $file
-     */
-    public function setFile($file)
-    {
-        $this->file = $file;
-    }
 
-    public function upload()
-    {
-        // the file property can be empty if the field is not required
-        if (null === $this->getFile()) {
-            return;
-        }
-
-        // we use the original file name here but you should
-        // sanitize it at least to avoid any security issues
-
-        // move takes the target directory and target filename as params
-        $this->getFile()->move(
-            self::SERVER_PATH_TO_IMAGE_FOLDER,
-            $this->getFile()->getClientOriginalName()
-        );
-
-        // set the path property to the filename where you've saved the file
-        $this->filename = $this->getFile()->getClientOriginalName();
-
-        // clean up the file property as you won't need it anymore
-        $this->setFile(null);
-    }
-
-    public function lifecycleFileUpload()
-    {
-        $this->upload();
-    }
 
 
 }

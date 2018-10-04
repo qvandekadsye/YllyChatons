@@ -37,6 +37,8 @@ framework:
 twig:
     debug: '%kernel.debug%'
     strict_variables: '%kernel.debug%'
+    form_themes:
+    - '@SonataMedia/Form/media_widgets.html.twig'
 
 # Doctrine Configuration
 doctrine:
@@ -144,6 +146,7 @@ sonata_media:
       - sonata.media.provider.vimeo
 
       formats:
+        preview: { width: 100 , quality: 70}
         small: { width: 100 , quality: 70}
         big:   { width: 500 , quality: 70}
 
@@ -153,10 +156,10 @@ sonata_media:
 
   filesystem:
     local:
-      directory:  "%kernel.root_dir%/../public/uploads/media" #flex
-      #directory:  "%kernel.root_dir%/../web/uploads/media" #non-flex
+      #directory:  "%kernel.root_dir%/../public/uploads/media" #flex
+      directory:  "%kernel.root_dir%/../web/uploads/media" #non-flex
       create:     false
   class:
-    media: App\Application\Sonata\MediaBundle\Entity\Media
-    gallery: App\Application\Sonata\MediaBundle\Entity\Gallery
-    gallery_has_media: App\Application\Sonata\MediaBundle\Entity\GalleryHasMedia
+    media: Application\Sonata\MediaBundle\Entity\Media
+    gallery: Application\Sonata\MediaBundle\Entity\Gallery
+    gallery_has_media: Application\Sonata\MediaBundle\Entity\GalleryHasMedia

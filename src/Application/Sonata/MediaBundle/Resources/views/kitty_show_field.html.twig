@@ -1,0 +1,4 @@
+{% extends 'SonataAdminBundle:CRUD:base_show_field.html.twig' %}
+    {% block field %}
+        {% media object.image, 'big' with {'sizes': '(min-width: 20em) 50vw, 100vw'} %}
+    {% endblock %}

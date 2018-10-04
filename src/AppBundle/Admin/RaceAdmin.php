@@ -8,7 +8,6 @@
 
 namespace AppBundle\Admin;
 
-
 use Sonata\AdminBundle\Admin\AbstractAdmin;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Datagrid\ListMapper;
@@ -21,7 +20,7 @@ class RaceAdmin extends AbstractAdmin
 {
     protected function configureFormFields(FormMapper $form)
     {
-        $form->add("RaceName",TextType::class,array('required' => true));
+        $form->add("RaceName", TextType::class, array('required' => true));
     }
 
     protected function configureListFields(ListMapper $list)
@@ -42,13 +41,10 @@ class RaceAdmin extends AbstractAdmin
     protected function configureRoutes(RouteCollection $collection)
     {
         $collection->remove("delete");
-
     }
 
     protected function configureShowFields(ShowMapper $showMapper)
     {
         $showMapper->add('raceName');
     }
-
-
 }

@@ -25,7 +25,7 @@ class Race
      * @ORM\Column(type="string", nullable=false, length=255)
      * @var string
      */
-    protected $raceName;
+    protected $raceName = '';
 
     /**
      * @ORM\OneToMany(targetEntity="Kitty", cascade={"persist","remove"},mappedBy="race")
@@ -66,10 +66,6 @@ class Race
 
     public function __toString()
     {
-        if ($this->getRaceName() !== null) {
-            return $this->getRaceName();
-        } else {
-            return '';
-        }
+        return $this->getRaceName();
     }
 }

@@ -60,7 +60,6 @@ class Kitty
     }
 
 
-
     /**
      * @return string
      */

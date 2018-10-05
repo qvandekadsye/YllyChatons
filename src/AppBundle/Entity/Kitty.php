@@ -1,13 +1,9 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: quentinvdk
- * Date: 02/10/18
- * Time: 14:07
- */
 
 namespace AppBundle\Entity;
+
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Class Kitty
@@ -34,22 +30,26 @@ class Kitty
     /**
      * @ORM\Column(name="birthday",nullable=false, type="date")
      * @var /Date
+     * @Assert\NotNull()
+     * @Assert\Date()
      */
     protected $birthday;
 
     /**
-     * @ORM\Column(name="imageFileName",type="string",nullable=true, length=255)
-     * @var string
+     * @ORM\OneToOne(targetEntity="\Application\Sonata\MediaBundle\Entity\Media", cascade={"persist"}, fetch="LAZY")
+     * @var \Application\Sonata\MediaBundle\Entity\Media
      */
-    protected $imageFileName;
+    protected $image;
+
 
     /**
      * @ORM\ManyToOne(targetEntity="Race",inversedBy="kitties")
+     * @ORM\JoinColumn(name="race_id", referencedColumnName="id", nullable=false)
      * @var Race
+     * @Assert\NotNull()
      */
     protected $race;
 
-    protected $file;
 
     /**
      * @return int
@@ -57,14 +57,6 @@ class Kitty
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * @param int $id
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
     }
 
     /**
@@ -100,20 +92,22 @@ class Kitty
     }
 
     /**
-     * @return string
+     * @return \Application\Sonata\MediaBundle\Entity\Media
      */
-    public function getImageFileName()
+    public function getImage()
     {
-        return $this->imageFileName;
+        return $this->image;
     }
 
     /**
-     * @param string $imageFileName
+     * @param \Application\Sonata\MediaBundle\Entity\Media $image
      */
-    public function setImageFileName($imageFileName)
+    public function setImage($image)
     {
-        $this->imageFileName = $imageFileName;
+        $this->image = $image;
     }
+
+
 
     /**
      * @return Race
@@ -130,22 +124,4 @@ class Kitty
     {
         $this->race = $race;
     }
-
-    /**
-     * @return mixed
-     */
-    public function getFile()
-    {
-        return $this->file;
-    }
-
-    /**
-     * @param mixed $file
-     */
-    public function setFile($file)
-    {
-        $this->file = $file;
-    }
-
-
 }

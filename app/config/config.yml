@@ -9,7 +9,6 @@ parameters:
     locale: en
 
 framework:
-    validation: { enable_annotations: true }
     templating:
      engines: ['twig']
     #esi: ~
@@ -157,3 +156,13 @@ sonata_media:
     media: Application\Sonata\MediaBundle\Entity\Media
     gallery: Sonata\MediaBundle\Entity\BaseGallery
     gallery_has_media: Sonata\MediaBundle\Entity\BaseGalleryHasMedia
+
+fos_rest:
+  routing_loader:
+    include_format: false
+
+  view:
+   view_response_listener: true
+  format_listener:
+      rules:
+       - { path: '^/', priorities: ['json'], fallback_format: 'json' }

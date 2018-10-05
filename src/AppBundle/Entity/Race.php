@@ -42,7 +42,6 @@ class Race
         return $this->id;
     }
 
-
     /**
      * @return string
      */

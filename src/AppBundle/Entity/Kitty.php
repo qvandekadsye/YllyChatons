@@ -59,7 +59,6 @@ class Kitty
         return $this->id;
     }
 
-
     /**
      * @return string
      */

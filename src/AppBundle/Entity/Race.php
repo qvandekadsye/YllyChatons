@@ -4,6 +4,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Class Race
@@ -24,6 +25,7 @@ class Race
     /**
      * @ORM\Column(type="string", nullable=false, length=255)
      * @var string
+     * @Assert\NotNull()
      */
     protected $raceName = '';
 
@@ -40,13 +42,7 @@ class Race
         return $this->id;
     }
 
-    /**
-     * @param int $id
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
-    }
+
 
     /**
      * @return string

@@ -31,6 +31,7 @@ class Kitty
      * @ORM\Column(name="birthday",nullable=false, type="date")
      * @var /Date
      * @Assert\NotNull()
+     * @Assert\Date()
      */
     protected $birthday;
 
@@ -58,13 +59,7 @@ class Kitty
         return $this->id;
     }
 
-    /**
-     * @param int $id
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
-    }
+
 
     /**
      * @return string

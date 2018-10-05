@@ -1,14 +1,10 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: quentinvdk
- * Date: 02/10/18
- * Time: 11:47
- */
+
 
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Class Race
@@ -29,8 +25,9 @@ class Race
     /**
      * @ORM\Column(type="string", nullable=false, length=255)
      * @var string
+     * @Assert\NotNull()
      */
-    protected $raceName;
+    protected $raceName = '';
 
     /**
      * @ORM\OneToMany(targetEntity="Kitty", cascade={"persist","remove"},mappedBy="race")
@@ -46,17 +43,9 @@ class Race
     }
 
     /**
-     * @param int $id
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
-    }
-
-    /**
      * @return string
      */
-    public function getRaceName()
+    public function getRaceName(): ?string
     {
         return $this->raceName;
     }
@@ -73,6 +62,4 @@ class Race
     {
         return $this->getRaceName();
     }
-
-
 }

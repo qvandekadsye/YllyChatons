@@ -9,8 +9,11 @@ parameters:
     locale: en
 
 framework:
+    validation: { enable_annotations: true }
+    templating:
+     engines: ['twig']
     #esi: ~
-    #translator: { fallbacks: ['%locale%'] }
+    translator: { fallbacks: ['%locale%'] }
     secret: '%secret%'
     router:
         resource: '%kernel.project_dir%/app/config/routing.yml'
@@ -35,6 +38,8 @@ framework:
 twig:
     debug: '%kernel.debug%'
     strict_variables: '%kernel.debug%'
+    form_themes:
+    - '@SonataMedia/Form/media_widgets.html.twig'
 
 # Doctrine Configuration
 doctrine:
@@ -52,11 +57,14 @@ doctrine:
         #   2. Uncomment database_path in parameters.yml.dist
         #   3. Uncomment next line:
         #path: '%database_path%'
+        types:
+          json: Sonata\Doctrine\Types\JsonType
 
     orm:
-        auto_generate_proxy_classes: '%kernel.debug%'
-        naming_strategy: doctrine.orm.naming_strategy.underscore
-        auto_mapping: true
+      auto_generate_proxy_classes: '%kernel.debug%'
+      naming_strategy: doctrine.orm.naming_strategy.underscore
+      auto_mapping: true
+
 
 # Swiftmailer Configuration
 swiftmailer:
@@ -69,3 +77,83 @@ swiftmailer:
 sensio_framework_extra:
    router:
         annotations: false
+
+sonata_block:
+  blocks:
+    # enable the SonataAdminBundle block
+    sonata.admin.block.admin_list:
+      contexts: [admin]
+    sonata.user.block.menu:    # used to display the menu in profile pages
+    sonata.user.block.account: # used to display menu option (login option)
+    sonata.block.service.text: # used to if you plan to use Sonata user routes
+
+fos_user:
+  db_driver:      orm # can be orm or odm
+  firewall_name:  main
+  user_class:     Application\Sonata\UserBundle\Entity\User
+  from_email:
+    address: "%mailer_user%"
+    sender_name: "%mailer_user%"
+
+
+  group:
+    group_class:   Application\Sonata\UserBundle\Entity\Group
+    group_manager: sonata.user.orm.group_manager                    # If you're using doctrine orm (use sonata.user.mongodb.group_manager for mongodb)
+
+  service:
+    user_manager: sonata.user.orm.user_manager
+
+sonata_user:
+  security_acl: true
+  manager_type: orm
+  class:
+    user: Application\Sonata\UserBundle\Entity\User
+    group: Application\Sonata\UserBundle\Entity\Group
+
+  admin:                  # Admin Classes
+    user:
+      class:          Sonata\UserBundle\Admin\Entity\UserAdmin
+      controller:     SonataAdminBundle:CRUD
+      translation:    SonataUserBundle
+
+    group:
+      class:          Sonata\UserBundle\Admin\Entity\GroupAdmin
+      controller:     SonataAdminBundle:CRUD
+      translation:    SonataUserBundle
+
+
+sonata_media:
+  # if you don't use default namespace configuration
+  #class:
+  #    media: MyVendor\MediaBundle\Entity\Media
+  #    gallery: MyVendor\MediaBundle\Entity\Gallery
+  #    gallery_has_media: MyVendor\MediaBundle\Entity\GalleryHasMedia
+  db_driver: doctrine_orm # or doctrine_mongodb, doctrine_phpcr it is mandatory to choose one here
+  default_context: default # you need to set a context
+  contexts:
+    default:  # the default context is mandatory
+      providers:
+      - sonata.media.provider.dailymotion
+      - sonata.media.provider.youtube
+      - sonata.media.provider.image
+      - sonata.media.provider.file
+      - sonata.media.provider.vimeo
+
+      formats:
+        preview: { width: 100 , quality: 70}
+        small: { width: 100 , quality: 70}
+        big:   { width: 500 , quality: 70}
+
+  cdn:
+    server:
+      path: /uploads/media # http://media.sonata-project.org/
+
+  filesystem:
+    local:
+      #directory:  "%kernel.root_dir%/../public/uploads/media" #flex
+      directory:  "%kernel.root_dir%/../web/uploads/media" #non-flex
+      create:     false
+  class:
+    media: Application\Sonata\MediaBundle\Entity\Media
+    gallery: Sonata\MediaBundle\Entity\BaseGallery
+    gallery_has_media: Sonata\MediaBundle\Entity\BaseGalleryHasMedia

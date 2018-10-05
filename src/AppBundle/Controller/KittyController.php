@@ -28,7 +28,7 @@ class KittyController extends Controller
     /**
      * @param Request $request
      * @Rest\View()
-     * @Rest\Get("/kitties")
+     * @Rest\Get("/api/kitties")
      * @return array
      */
     public function getKittiesAction()
@@ -39,7 +39,7 @@ class KittyController extends Controller
     /**
      * @param Request $request
      * @Rest\View()
-     * @Rest\Get("/kitties/{id}")
+     * @Rest\Get("/api/kitties/{id}")
      * @return Object |JsonResponse
      */
     public function getKittyAction(Request $request)
@@ -52,7 +52,7 @@ class KittyController extends Controller
     }
 
     /**
-     * * @Rest\Get("/kitties/")
+     * * @Rest\Get("/api/kitties/")
      */
     public function RedirectToGetKittiesAction()
     {

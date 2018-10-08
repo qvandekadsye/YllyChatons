@@ -10,6 +10,7 @@ namespace AppBundle\Controller;
 use AppBundle\Repository\KittyRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\Controller\Annotations as Rest;
+use FOS\RestBundle\Request\ParamFetcher;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -31,11 +32,14 @@ class KittyController extends Controller
      * @param Request $request
      * @Rest\View()
      * @Rest\Get("/api/kitties")
+     * @Rest\QueryParam(name="page", nullable=true, default=1,requirements="\d+" )
      * @return array
      */
-    public function getKittiesAction()
+    public function getKittiesAction(ParamFetcher $paramFetcher)
     {
-        return  $this->kittyRepository->findAll();
+        $kitties = $this->kittyRepository->findKittiesByPage($paramFetcher->get('page'));
+        $data =array('data' => $kitties, 'meta' => array('pageNumber' =>99));//Test
+        return $data;
     }
 
     /**

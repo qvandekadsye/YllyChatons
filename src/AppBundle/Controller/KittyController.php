@@ -11,6 +11,7 @@ use AppBundle\Repository\KittyRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Request\ParamFetcher;
+use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -29,10 +30,11 @@ class KittyController extends Controller
 
 
     /**
-     * @param Request $request
+     * é@param Request $request
      * @Rest\View()
      * @Rest\Get("/api/kitties")
      * @Rest\QueryParam(name="page", nullable=true, default=1,requirements="\d+" )
+     * @ApiDoc(description="Find all kitties", resource=true)
      * @return array
      */
     public function getKittiesAction(ParamFetcher $paramFetcher)
@@ -47,6 +49,14 @@ class KittyController extends Controller
      * @Rest\View()
      * @Rest\Get("/api/kitties/{id}")
      * @return Object |JsonResponse
+     * @ApiDoc(description="Obtenir les information d'un chaton en particulier", requirements={
+     *  {
+     *     "name"="id",
+     *     "dataType"="integer",
+     *     "requirement"="\d+",
+     *     "description"="L'id du chaton à obtenir."
+     *   }
+     *     })
      */
     public function getKittyAction(Request $request)
     {
@@ -69,7 +79,14 @@ class KittyController extends Controller
      * @param Request $request
      * @Rest\View()
      * @Rest\Delete("/api/kitties/{id}")
-     *
+     * @ApiDoc(description="Supprime un chaton en particulier", requirements={
+     *  {
+     *     "name"="id",
+     *     "dataType"="integer",
+     *     "requirement"="\d+",
+     *     "description"="Le chaton à effacer"
+     *   }
+     *     })
      * @return JsonResponse
      */
     public function deleteKittyAction(Request $request)
@@ -82,4 +99,6 @@ class KittyController extends Controller
         $this->entityManager->flush();
         return new JsonResponse(null, Response::HTTP_NO_CONTENT);
     }
+
+
 }

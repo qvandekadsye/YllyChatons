@@ -77,6 +77,9 @@ sensio_framework_extra:
    router:
         annotations: false
 
+sonata_admin:
+  title: Ylly Chatons
+
 sonata_block:
   blocks:
     # enable the SonataAdminBundle block

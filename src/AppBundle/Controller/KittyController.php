@@ -34,16 +34,19 @@ class KittyController extends Controller
      * @Rest\View()
      * @Rest\Get("/api/kitties")
      * @Rest\QueryParam(name="page", nullable=true, default=1,requirements="\d+" )
+     * @Rest\QueryParam(name="perPage", nullable=true, default="2", requirements="\d+")
      * @ApiDoc(description="Find all kitties", resource=true)
      * @return array
      */
     public function getKittiesAction(ParamFetcher $paramFetcher)
     {
-        $kitties = $this->kittyRepository->findKittiesByPage($paramFetcher->get('page'));
-        $data =array('data' => $kitties, 'meta' => array('pageNumber' =>99));//Test
+        $maxResult = $paramFetcher->get('perPage');
+        $kitties = $this->kittyRepository->findKittiesByPage($paramFetcher->get('page'), $maxResult);
+        $kiityNumber = $this->kittyRepository->countAllKitties();
+        $numberOfPage = ceil($kiityNumber/$maxResult);
+        $data = array('data' => $kitties, 'meta' => array('pageNumber' =>$numberOfPage, 'perPage' =>$maxResult));//Test
         return $data;
     }
-
     /**
      * @param Request $request
      * @Rest\View()

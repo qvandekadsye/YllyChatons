@@ -135,4 +135,26 @@ class KittyController extends Controller
         }
     }
 
+    /**
+     * @param Request $request
+     * @Rest\View(statusCode=Response::HTTP_OK)
+     * @Rest\Put("/api/kitties/{id}")
+     */
+    public function updateKittyAction(Request $request)
+    {
+        $kitty = $this->kittyRepository->find($request->get('id'));
+        if (empty($kitty)) {
+            return new JsonResponse(array('message' => 'Kitty not found'), Response::HTTP_NOT_FOUND);
+        } else {
+            $kittyForm = $this->createForm(KittyType::class, $kitty);
+            $kittyForm->submit($request->request->all(), false); // Validation des données
+            if ($kittyForm->isValid()) {
+                $this->entityManager->flush();
+                $kitty = $this->kittyRepository->find($request->get('id'));
+                return $kitty;
+            } else {
+                return $kittyForm;
+            }
+        }
+    }
 }

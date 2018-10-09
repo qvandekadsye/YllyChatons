@@ -7,6 +7,8 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\Kitty;
+use AppBundle\Form\KittyType;
 use AppBundle\Repository\KittyRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\Controller\Annotations as Rest;
@@ -103,5 +105,22 @@ class KittyController extends Controller
         return new JsonResponse(null, Response::HTTP_NO_CONTENT);
     }
 
-
+    /**
+     * @param Request $request
+     * @Rest\View(statusCode=Response::HTTP_CREATED)
+     * @Rest\Post("/api/kitties")
+     */
+    public function createKittyAction(Request $request)
+    {
+        $newKitty = new Kitty();
+        $kittyForm = $this->createForm(KittyType::class, $newKitty);
+        $kittyForm->submit($request->request->all()); // Validation des données
+        if ($kittyForm->isValid()) {
+            $this->entityManager->persist($newKitty);
+            $this->entityManager->flush();
+            return $newKitty;
+        } else {
+            return $kittyForm;
+        }
+    }
 }

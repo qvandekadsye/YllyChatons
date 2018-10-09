@@ -10,6 +10,7 @@ namespace AppBundle\Controller;
 use AppBundle\Entity\Kitty;
 use AppBundle\Form\KittyType;
 use AppBundle\Repository\KittyRepository;
+use Application\Sonata\MediaBundle\Entity\Media;
 use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Request\ParamFetcher;
@@ -116,6 +117,16 @@ class KittyController extends Controller
         $kittyForm = $this->createForm(KittyType::class, $newKitty);
         $kittyForm->submit($request->request->all()); // Validation des données
         if ($kittyForm->isValid()) {
+            $fileInfo = $request->files->get('image');
+            if ($fileInfo !== null) {
+                $media = new Media();
+                $media->setProviderName('sonata.media.provider.image');
+                $media->setBinaryContent($fileInfo);
+                $media->setName($fileInfo->getClientOriginalName());
+                $media->setEnabled(true);
+                $media->setContext('default');
+                $newKitty->setImage($media);
+            }
             $this->entityManager->persist($newKitty);
             $this->entityManager->flush();
             return $newKitty;
@@ -123,4 +134,5 @@ class KittyController extends Controller
             return $kittyForm;
         }
     }
+
 }

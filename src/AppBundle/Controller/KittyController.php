@@ -19,16 +19,19 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Core\Security;
 
 class KittyController extends Controller
 {
     protected $kittyRepository;
     protected $entityManager;
+    protected $securityChecker;
 
-    public function __construct(KittyRepository $kittyRepository, EntityManagerInterface $entityManager)
+    public function __construct(KittyRepository $kittyRepository, EntityManagerInterface $entityManager, Security $securityChecker)
     {
         $this->kittyRepository = $kittyRepository;
         $this->entityManager = $entityManager;
+        $this->securityChecker = $securityChecker;
     }
 
 
@@ -44,9 +47,14 @@ class KittyController extends Controller
     public function getKittiesAction(ParamFetcher $paramFetcher)
     {
         $maxResult = $paramFetcher->get('perPage');
-        $kitties = $this->kittyRepository->findKittiesByPage($paramFetcher->get('page'), $maxResult);
         $kiityNumber = $this->kittyRepository->countAllKitties();
         $numberOfPage = ceil($kiityNumber/$maxResult);
+        if ($this->securityChecker->getToken() && $this->securityChecker->isGranted('ROLE_USER')) {
+            $kitties = $this->kittyRepository->findKittiesByPage($paramFetcher->get('page'), $maxResult);
+        } else {
+            $kitties = $this->kittyRepository->findKittiesNameByPage($paramFetcher->get('page'), $maxResult);
+        }
+
         $data = array('data' => $kitties, 'meta' => array('pageNumber' =>$numberOfPage, 'perPage' =>$maxResult));//Test
         return $data;
     }
@@ -110,6 +118,7 @@ class KittyController extends Controller
      * @param Request $request
      * @Rest\View(statusCode=Response::HTTP_CREATED)
      * @Rest\Post("/api/kitties")
+     * @\Sensio\Bundle\FrameworkExtraBundle\Configuration\Security("has_role('ROLE_ADMIN')")
      */
     public function createKittyAction(Request $request)
     {
@@ -118,18 +127,7 @@ class KittyController extends Controller
         $kittyForm->submit($request->request->all()); // Validation des données
         if ($kittyForm->isValid()) {
             $fileInfo = $request->files->get('image');
-            if ($fileInfo !== null) {
-                $media = new Media();
-                $media->setProviderName('sonata.media.provider.image');
-                $media->setBinaryContent($fileInfo);
-                $media->setName($fileInfo->getClientOriginalName());
-                $media->setEnabled(true);
-                $media->setContext('default');
-                $newKitty->setImage($media);
-            }
-            $this->entityManager->persist($newKitty);
-            $this->entityManager->flush();
-            return $newKitty;
+            return $this->kittyRepository->createKitty($newKitty, $fileInfo);
         } else {
             return $kittyForm;
         }

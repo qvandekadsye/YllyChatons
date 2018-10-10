@@ -10,7 +10,11 @@ security:
         - { path: ^/admin/resetting, role: IS_AUTHENTICATED_ANONYMOUSLY }
 
         - { path: ^/admin/, role: [ROLE_ADMIN, ROLE_SONATA_ADMIN] }
+        - { path: ^/api/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/api/,       roles: IS_AUTHENTICATED_FULLY }
         - { path: ^/.*, role: IS_AUTHENTICATED_ANONYMOUSLY }
+
+
 
     encoders:
         FOS\UserBundle\Model\UserInterface: bcrypt
@@ -35,6 +39,22 @@ security:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
+
+        api:
+            pattern: ^/api
+            context: user
+            stateless: true
+            anonymous: false
+            provider: fos_userbundle
+            json_login:
+                check_path:               /api/login_check
+                success_handler: lexik_jwt_authentication.handler.authentication_success
+                failure_handler: lexik_jwt_authentication.handler.authentication_failure
+                require_previous_session: false
+
+            guard:
+                authenticators:
+                - lexik_jwt_authentication.jwt_token_authenticator
 
         admin:
             pattern:            /admin(.*)
@@ -63,5 +83,7 @@ security:
                 default_target_path: /admin/dashboard
             logout:             true
             anonymous:          true
+
+
 
 

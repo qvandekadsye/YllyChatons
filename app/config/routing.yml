@@ -6,7 +6,6 @@ NelmioApiDocBundle:
   resource: "@NelmioApiDocBundle/Resources/config/routing.yml"
   prefix:   /doc/api
 
-
 Kitties:
   type:     rest
   resource: AppBundle\Controller\KittyController
@@ -35,3 +34,6 @@ gallery:
 media:
   resource: '@SonataMediaBundle/Resources/config/routing/media.xml'
   prefix: /media
+
+api_login_check:
+  path: /api/login_check

@@ -43,11 +43,7 @@ class KittyClientController extends AbstractController
         if ($kittyForm->isSubmitted() && $kittyForm->isValid()) {
             $this->entityManager->persist($newKitty);
             $this->entityManager->flush();
-
         }
-        return $this->render('Kitty/addKitty.html.twig',array('form' =>$kittyForm->createView()));
-
-
+        return $this->render('Kitty/addKitty.html.twig', array('form' =>$kittyForm->createView()));
     }
-
 }

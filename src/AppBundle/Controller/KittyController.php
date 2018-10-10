@@ -36,11 +36,11 @@ class KittyController extends Controller
 
 
     /**
-     * é@param Request $request
+     * @param Request $request
      * @Rest\View()
      * @Rest\Get("/api/kitties")
-     * @Rest\QueryParam(name="page", nullable=true, default=1,requirements="\d+" )
-     * @Rest\QueryParam(name="perPage", nullable=true, default="2", requirements="\d+")
+     * @Rest\QueryParam(name="page", nullable=true, default=1,requirements="\d+", description="Définit la page")
+     * @Rest\QueryParam(name="perPage", nullable=true, default="2", requirements="\d+", description="Definit le nombre de chat par page")
      * @ApiDoc(description="Find all kitties", resource=true)
      * @return array
      */
@@ -93,7 +93,7 @@ class KittyController extends Controller
      * @param Request $request
      * @Rest\View()
      * @Rest\Delete("/api/kitties/{id}")
-     * @ApiDoc(description="Supprime un chaton en particulier", requirements={
+     * @ApiDoc(description="Supprime un chaton en particulier", authentication=true, requirements={
      *  {
      *     "name"="id",
      *     "dataType"="integer",
@@ -119,6 +119,45 @@ class KittyController extends Controller
      * @Rest\View(statusCode=Response::HTTP_CREATED)
      * @Rest\Post("/api/kitties")
      * @\Sensio\Bundle\FrameworkExtraBundle\Configuration\Security("has_role('ROLE_ADMIN')")
+     * @ApiDoc(description="Crée un chaton", authentication=true, requirements={
+     *   {
+     *     "name" = "name",
+     *     "dataType" = "string",
+     *     "description" = "Le nom du chaton"
+     *   },
+     *   {
+     *     "name"= "birthday[year]",
+     *     "dataType" = "integer",
+     *     "requirement" = "\d+",
+     *     "description" = "Année de naissance"
+     *   },
+     *    {
+     *     "name"= "birthday[month]",
+     *     "dataType" = "integer",
+     *     "requirement" = "\d+",
+     *     "description" = "mois de naissance"
+     *   }
+     *    ,
+     *     {
+     *     "name"= "birthday[day]",
+     *     "dataType" = "integer",
+     *     "requirement" = "\d+",
+     *     "description" = "Jour de naissance"
+     *   },
+     *      {
+     *     "name"= "image",
+     *     "dataType" = "File",
+     *     "requirement" = "Jpeg | PNG",
+     *     "description" = "Image du chaton [non obligatoire]"
+     *
+     *   },
+     *     {
+     *     "name"= "race",
+     *     "dataType" = "integer",
+     *     "requirement" = "Un identifiant d'une entité Race",
+     *     "description" = "Designe la race du chat"
+     *   }
+     *     })
      */
     public function createKittyAction(Request $request)
     {
@@ -137,6 +176,44 @@ class KittyController extends Controller
      * @param Request $request
      * @Rest\View(statusCode=Response::HTTP_OK)
      * @Rest\Put("/api/kitties/{id}")
+     * @ApiDoc(description="Met à jour un chaton", authentication=true, requirements={
+     *     {
+     *     "name"="id",
+     *     "dataType"="integer",
+     *     "requirement"="\d+",
+     *     "description"="Le chaton à mettre à jour"
+     *   },
+     *   {
+     *     "name" = "name",
+     *     "dataType" = "string",
+     *     "description" = "Le nom du chaton"
+     *   },
+     *   {
+     *     "name"= "birthday[year]",
+     *     "dataType" = "integer",
+     *     "requirement" = "\d+",
+     *     "description" = "Année de naissance"
+     *   },
+     *    {
+     *     "name"= "birthday[month]",
+     *     "dataType" = "integer",
+     *     "requirement" = "\d+",
+     *     "description" = "mois de naissance"
+     *   }
+     *    ,
+     *     {
+     *     "name"= "birthday[day]",
+     *     "dataType" = "integer",
+     *     "requirement" = "\d+",
+     *     "description" = "Jour de naissance"
+     *   },
+     *     {
+     *     "name"= "race",
+     *     "dataType" = "integer",
+     *     "requirement" = "Un identifiant d'une entité Race",
+     *     "description" = "Designe la race du chat"
+     *   }
+     *     })
      */
     public function updateKittyAction(Request $request)
     {

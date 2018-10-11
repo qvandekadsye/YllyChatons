@@ -40,7 +40,7 @@ services:
       class: AppBundle\Admin\KittyAdmin
       arguments: [~, AppBundle\Entity\Kitty, ~]
       calls:
-        - [setTemplate, [outer_list_rows_mosaic, KittyAdmin/kitty_mosaic_list_field.html.twig]]
+        - [setTemplate, [outer_list_rows_mosaic, KittyAdmin/KittyMosaicListField.html.twig]]
       tags:
       - { name: sonata.admin, manager_type: orm, label: Kitty }
       public: true

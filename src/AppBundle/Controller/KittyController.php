@@ -11,6 +11,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Request\ParamFetcher;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -32,13 +33,13 @@ class KittyController extends Controller
 
 
     /**
-     * @param Request $request
+     * @param ParamFetcher $paramFetcher
+     * @return array
      * @Rest\View()
      * @Rest\Get("/api/kitties")
      * @Rest\QueryParam(name="page", nullable=true, default=1,requirements="\d+", description="Définit la page")
      * @Rest\QueryParam(name="perPage", nullable=true, default="2", requirements="\d+", description="Definit le nombre de chat par page")
      * @ApiDoc(description="Find all kitties", resource=true)
-     * @return array
      */
     public function getKittiesAction(ParamFetcher $paramFetcher)
     {
@@ -54,11 +55,13 @@ class KittyController extends Controller
         $data = array('data' => $kitties, 'meta' => array('pageNumber' =>$numberOfPage, 'perPage' =>$maxResult));//Test
         return $data;
     }
+
     /**
-     * @param Request $request
+     * @param Kitty $kitty
+     * @return Object |JsonResponse
      * @Rest\View()
      * @Rest\Get("/api/kitties/{id}")
-     * @return Object |JsonResponse
+     * @ParamConverter()
      * @ApiDoc(description="Obtenir les information d'un chaton en particulier", requirements={
      *  {
      *     "name"="id",
@@ -68,12 +71,8 @@ class KittyController extends Controller
      *   }
      *     })
      */
-    public function getKittyAction(Request $request)
+    public function getKittyAction(Kitty $kitty)
     {
-        $kitty =  $this->kittyRepository->find($request->get('id'));
-        if (empty($kitty)) {
-            return new JsonResponse(array('message' => 'Kitty not found'), Response::HTTP_NOT_FOUND);
-        }
         return $kitty;
     }
 
@@ -86,7 +85,8 @@ class KittyController extends Controller
     }
 
     /**
-     * @param Request $request
+     * @param Kitty $kitty
+     * @return JsonResponse
      * @Rest\View()
      * @Rest\Delete("/api/kitties/{id}")
      * @ApiDoc(description="Supprime un chaton en particulier", authentication=true, requirements={
@@ -97,14 +97,9 @@ class KittyController extends Controller
      *     "description"="Le chaton à effacer"
      *   }
      *     })
-     * @return JsonResponse
      */
-    public function deleteKittyAction(Request $request)
+    public function deleteKittyAction(Kitty $kitty)
     {
-        $kitty = $this->kittyRepository->find($request->get('id'));
-        if (empty($kitty)) {
-            return new JsonResponse(array('message' => 'Kitty not found'), Response::HTTP_NOT_FOUND);
-        }
         $this->entityManager->remove($kitty);
         $this->entityManager->flush();
         return new JsonResponse(null, Response::HTTP_NO_CONTENT);
@@ -154,6 +149,7 @@ class KittyController extends Controller
      *     "description" = "Designe la race du chat"
      *   }
      *     })
+     * @return Kitty|\Symfony\Component\Form\FormInterface
      */
     public function createKittyAction(Request $request)
     {
@@ -169,7 +165,8 @@ class KittyController extends Controller
     }
 
     /**
-     * @param Request $request
+     * @param Kitty $kitty
+     * @return Kitty|null|object|\Symfony\Component\Form\FormInterface|JsonResponse
      * @Rest\View(statusCode=Response::HTTP_OK)
      * @Rest\Put("/api/kitties/{id}")
      * @ApiDoc(description="Met à jour un chaton", authentication=true, requirements={
@@ -211,21 +208,15 @@ class KittyController extends Controller
      *   }
      *     })
      */
-    public function updateKittyAction(Request $request)
+    public function updateKittyAction(Kitty $kitty)
     {
-        $kitty = $this->kittyRepository->find($request->get('id'));
-        if (empty($kitty)) {
-            return new JsonResponse(array('message' => 'Kitty not found'), Response::HTTP_NOT_FOUND);
+        $kittyForm = $this->createForm(KittyType::class, $kitty);
+        $kittyForm->submit($kitty, false); // Validation des données
+        if ($kittyForm->isValid()) {
+            $this->entityManager->flush();
+            return $kitty;
         } else {
-            $kittyForm = $this->createForm(KittyType::class, $kitty);
-            $kittyForm->submit($request->request->all(), false); // Validation des données
-            if ($kittyForm->isValid()) {
-                $this->entityManager->flush();
-                $kitty = $this->kittyRepository->find($request->get('id'));
-                return $kitty;
-            } else {
-                return $kittyForm;
-            }
+            return $kittyForm;
         }
     }
 }

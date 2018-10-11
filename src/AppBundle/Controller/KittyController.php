@@ -1,9 +1,5 @@
 <?php
-/**
- * User: quentinvdk
- * Date: 05/10/18
- * Time: 10:01
- */
+
 
 namespace AppBundle\Controller;
 

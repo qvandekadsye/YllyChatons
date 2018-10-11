@@ -51,4 +51,7 @@ passphrase: [votre passphrase]
    - PUT
    - DELETE
    - Sécurisation de l'api avec JWT
-   
+  
+  # Troubleshooting
+  **La clé privée SSH existe mais n'est pas trouvée par l'application**
+  - Il faut changer les droits pour donner les droits en lecture

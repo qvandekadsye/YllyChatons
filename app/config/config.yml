@@ -9,6 +9,7 @@ parameters:
     locale: fr
 
 framework:
+    validation: { enable_annotations: true }
     templating:
      engines: ['twig']
     #esi: ~

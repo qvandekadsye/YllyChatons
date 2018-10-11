@@ -2,14 +2,8 @@
 
 namespace AppBundle\Repository;
 
-use AppBundle\Entity\Race;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\ORM\EntityRepository;
 
-class RaceRepository extends ServiceEntityRepository
+class RaceRepository extends EntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
-    {
-        parent::__construct($registry, Race::class);
-    }
 }

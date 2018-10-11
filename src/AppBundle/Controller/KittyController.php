@@ -5,11 +5,9 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Kitty;
 use AppBundle\Form\KittyType;
-use AppBundle\Repository\KittyRepository;
-use Application\Sonata\MediaBundle\Entity\Media;
-use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Request\ParamFetcher;
+use AppBundle\FormHandler\KittyFormHandler;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -20,14 +18,10 @@ use Symfony\Component\Security\Core\Security;
 
 class KittyController extends Controller
 {
-    protected $kittyRepository;
-    protected $entityManager;
     protected $securityChecker;
 
-    public function __construct(KittyRepository $kittyRepository, EntityManagerInterface $entityManager, Security $securityChecker)
+    public function __construct( Security $securityChecker)
     {
-        $this->kittyRepository = $kittyRepository;
-        $this->entityManager = $entityManager;
         $this->securityChecker = $securityChecker;
     }
 
@@ -43,13 +37,14 @@ class KittyController extends Controller
      */
     public function getKittiesAction(ParamFetcher $paramFetcher)
     {
+        $kittyRepository = $this->get('doctrine')->getManager()->getRepository(Kitty::class);
         $maxResult = $paramFetcher->get('perPage');
-        $kiityNumber = $this->kittyRepository->countAllKitties();
-        $numberOfPage = ceil($kiityNumber/$maxResult);
+        $kittyNumber = $kittyRepository->countAllKitties();
+        $numberOfPage = ceil($kittyNumber/$maxResult);
         if ($this->securityChecker->getToken() && $this->securityChecker->isGranted('ROLE_USER')) {
-            $kitties = $this->kittyRepository->findKittiesByPage($paramFetcher->get('page'), $maxResult);
+            $kitties = $kittyRepository->findKittiesByPage($paramFetcher->get('page'), $maxResult);
         } else {
-            $kitties = $this->kittyRepository->findKittiesNameByPage($paramFetcher->get('page'), $maxResult);
+            $kitties = $kittyRepository->findKittiesNameByPage($paramFetcher->get('page'), $maxResult);
         }
 
         $data = array('data' => $kitties, 'meta' => array('pageNumber' =>$numberOfPage, 'perPage' =>$maxResult));//Test
@@ -100,8 +95,9 @@ class KittyController extends Controller
      */
     public function deleteKittyAction(Kitty $kitty)
     {
-        $this->entityManager->remove($kitty);
-        $this->entityManager->flush();
+        $entityManager = $this->get('doctrine')->getManager();
+        $entityManager->remove($kitty);
+        $entityManager->flush();
         return new JsonResponse(null, Response::HTTP_NO_CONTENT);
     }
 
@@ -153,15 +149,12 @@ class KittyController extends Controller
      */
     public function createKittyAction(Request $request)
     {
+        $entityManager = $this->get('doctrine')->getManager();
         $newKitty = new Kitty();
         $kittyForm = $this->createForm(KittyType::class, $newKitty);
-        $kittyForm->submit($request->request->all()); // Validation des données
-        if ($kittyForm->isValid()) {
-            $fileInfo = $request->files->get('image');
-            return $this->kittyRepository->createKitty($newKitty, $fileInfo);
-        } else {
-            return $kittyForm;
-        }
+        $formHandler = new KittyFormHandler($kittyForm, $entityManager, $request);
+        return $formHandler->processPost($newKitty);
+
     }
 
     /**
@@ -210,13 +203,9 @@ class KittyController extends Controller
      */
     public function updateKittyAction(Kitty $kitty)
     {
+        $entityManager = $this->get('doctrine')->getManager();
         $kittyForm = $this->createForm(KittyType::class, $kitty);
-        $kittyForm->submit($kitty, false); // Validation des données
-        if ($kittyForm->isValid()) {
-            $this->entityManager->flush();
-            return $kitty;
-        } else {
-            return $kittyForm;
-        }
+        $kittyFormHandler = new KittyFormHandler($kittyForm, $entityManager, null);
+        return $kittyFormHandler->processPost($kitty);
     }
 }

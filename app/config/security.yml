@@ -15,8 +15,6 @@ security:
         - { path: ^/api/,       roles: IS_AUTHENTICATED_FULLY }
         - { path: ^/.*, role: IS_AUTHENTICATED_ANONYMOUSLY }
 
-
-
     encoders:
         FOS\UserBundle\Model\UserInterface: bcrypt
 
@@ -48,7 +46,7 @@ security:
             anonymous: true
             provider: fos_userbundle
             json_login:
-                check_path:               /api/login_check
+                check_path: /api/login_check
                 success_handler: lexik_jwt_authentication.handler.authentication_success
                 failure_handler: lexik_jwt_authentication.handler.authentication_failure
                 require_previous_session: false

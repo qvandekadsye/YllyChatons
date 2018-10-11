@@ -26,7 +26,7 @@ class Kitty
      * @ORM\Column(name="name", type="string",nullable=false,length=255)
      * @var string
      */
-    protected $name;
+    protected $name ="";
     /**
      * @ORM\Column(name="birthday",nullable=false, type="date")
      * @var /Date
@@ -123,5 +123,10 @@ class Kitty
     public function setRace($race)
     {
         $this->race = $race;
+    }
+
+    public function __toString()
+    {
+        return $this->getName();
     }
 }

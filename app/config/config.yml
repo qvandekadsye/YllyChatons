@@ -6,7 +6,7 @@ imports:
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
-    locale: en
+    locale: fr
 
 framework:
     validation: { enable_annotations: true }
@@ -77,6 +77,10 @@ swiftmailer:
 sensio_framework_extra:
    router:
         annotations: false
+   request: { converters: true }
+
+sonata_admin:
+  title: Ylly Chatons
 
 sonata_block:
   blocks:
@@ -157,3 +161,30 @@ sonata_media:
     media: Application\Sonata\MediaBundle\Entity\Media
     gallery: Sonata\MediaBundle\Entity\BaseGallery
     gallery_has_media: Sonata\MediaBundle\Entity\BaseGalleryHasMedia
+
+fos_rest:
+  routing_loader:
+    include_format: false
+  body_listener:
+    decoders:
+      json: fos_rest.decoder.jsontoform
+  view:
+   view_response_listener: true
+  format_listener:
+      rules:
+       - { path: '^/api', priorities: ['json'], fallback_format: 'json' }
+       - { path: '^/', priorities: ['html', '*/*'], fallback_format: html, prefer_extension: true  }
+  param_fetcher_listener:
+    enabled: true
+  body_converter:
+    enabled: true
+
+
+nelmio_api_doc: ~
+
+lexik_jwt_authentication:
+  secret_key:       '%kernel.root_dir%/config/jwt/private.pem'
+  public_key:       '%kernel.root_dir%/config/jwt/public.pem'
+  pass_phrase:      "%passphrase%"
+  token_ttl:        3600
+

@@ -32,7 +32,7 @@ class KittyAdmin extends AbstractAdmin
                 'name' => 'show'
             ]]);
 
-        $listMapper->addIdentifier('image', null, array('template' =>'@SonataMedia/kitty_list_field.html.twig'));
+        $listMapper->addIdentifier('image', null, array('template' =>'KittyAdmin/KittyListField.html.twig'));
         $listMapper->addIdentifier('birthday');
         $listMapper->addIdentifier('race', 'string');
     }
@@ -42,7 +42,7 @@ class KittyAdmin extends AbstractAdmin
         $showMapper->add('name');
         $showMapper->add('birthday');
         $showMapper->add('race');
-        $showMapper->add('image', null, array('template' =>'@SonataMedia/kitty_show_field.html.twig'));
+        $showMapper->add('image', null, array('template' =>'KittyAdmin/KittyShowField.html.twig'));
     }
 
     public function getExportFields()

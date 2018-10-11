@@ -2,6 +2,14 @@ app:
     resource: '@AppBundle/Controller/'
     type: annotation
 
+NelmioApiDocBundle:
+  resource: "@NelmioApiDocBundle/Resources/config/routing.yml"
+  prefix:   /doc/api
+
+Kitties:
+  type:     rest
+  resource: AppBundle\Controller\KittyController
+
 admin_area:
   resource: '@SonataAdminBundle/Resources/config/routing/sonata_admin.xml'
   prefix: /admin
@@ -26,3 +34,6 @@ gallery:
 media:
   resource: '@SonataMediaBundle/Resources/config/routing/media.xml'
   prefix: /media
+
+api_login_check:
+  path: /api/login_check

@@ -37,6 +37,9 @@ class AppKernel extends Kernel
             new JMS\SerializerBundle\JMSSerializerBundle(),
 
             new Application\Sonata\MediaBundle\ApplicationSonataMediaBundle(),
+            new FOS\RestBundle\FOSRestBundle(),
+            new Nelmio\ApiDocBundle\NelmioApiDocBundle(),
+            new Lexik\Bundle\JWTAuthenticationBundle\LexikJWTAuthenticationBundle(),
 
         ];
 

@@ -9,7 +9,6 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Kitty;
 use AppBundle\Form\KittyType;
-use AppBundle\Repository\KittyRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -21,12 +20,10 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class KittyClientController extends AbstractController
 {
-    protected $kittyRepository;
     protected $entityManager;
 
-    public function __construct(KittyRepository $kittyRepository, EntityManagerInterface $entityManager)
+    public function __construct(EntityManagerInterface $entityManager)
     {
-        $this->kittyRepository = $kittyRepository;
         $this->entityManager = $entityManager;
     }
 

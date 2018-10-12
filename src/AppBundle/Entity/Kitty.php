@@ -26,7 +26,7 @@ class Kitty
      * @ORM\Column(name="name", type="string",nullable=false,length=255)
      * @var string
      */
-    protected $name ="";
+    protected $name = "";
     /**
      * @ORM\Column(name="birthday",nullable=false, type="date")
      * @var /Date
@@ -34,6 +34,18 @@ class Kitty
      * @Assert\Date()
      */
     protected $birthday;
+
+    /**
+     * @var boolean
+     * @ORM\Column(name="issterilized", nullable=false, type="boolean", options={"default" : 0} )
+     */
+    protected $isSterilized = '';
+
+    /**
+     * @var string
+     * @ORM\Column(name="specialSign", nullable=true, type="text")
+     */
+    protected $specialSign;
 
     /**
      * @ORM\OneToOne(targetEntity="\Application\Sonata\MediaBundle\Entity\Media", cascade={"persist"}, fetch="LAZY")
@@ -90,6 +102,40 @@ class Kitty
     {
         $this->birthday = $birthday;
     }
+
+    /**
+     * @return bool
+     */
+    public function isSterilized(): bool
+    {
+        return $this->isSterilized;
+    }
+
+    /**
+     * @param bool $isSterilized
+     */
+    public function setIsSterilized(bool $isSterilized): void
+    {
+        $this->isSterilized = $isSterilized;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSpecialSign(): ?string
+    {
+        return $this->specialSign;
+    }
+
+    /**
+     * @param string $specialSign
+     */
+    public function setSpecialSign(string $specialSign): void
+    {
+        $this->specialSign = $specialSign;
+    }
+
+
 
     /**
      * @return \Application\Sonata\MediaBundle\Entity\Media

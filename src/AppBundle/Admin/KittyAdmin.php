@@ -11,6 +11,8 @@ use Sonata\AdminBundle\Form\Type\ModelListType;
 use Sonata\AdminBundle\Show\ShowMapper;
 use Sonata\MediaBundle\Form\Type\MediaType;
 use Symfony\Component\Form\Extension\Core\Type\BirthdayType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 class KittyAdmin extends AbstractAdmin
@@ -21,6 +23,8 @@ class KittyAdmin extends AbstractAdmin
             ->add("name", TextType::class, array('required' => true))
             ->add('birthday', BirthdayType::class, array('required' => false))
             ->add('image', MediaType::class, array('required' => false, 'provider' => 'sonata.media.provider.image', 'context' => 'default'))
+            ->add('isSterilized', CheckboxType::class)
+            ->add('specialSign', TextareaType::class)
             ->add('race', ModelListType::class, array('class' =>Race::class, 'required' =>true));
     }
 
@@ -34,7 +38,9 @@ class KittyAdmin extends AbstractAdmin
 
         $listMapper->addIdentifier('image', null, array('template' =>'KittyAdmin/KittyListField.html.twig'));
         $listMapper->addIdentifier('birthday');
+        $listMapper->addIdentifier('isSterilized', 'bool');
         $listMapper->addIdentifier('race', 'string');
+        $listMapper->addIdentifier('specialSign');
     }
 
     protected function configureShowFields(ShowMapper $showMapper)
@@ -42,11 +48,13 @@ class KittyAdmin extends AbstractAdmin
         $showMapper->add('name');
         $showMapper->add('birthday');
         $showMapper->add('race');
+        $showMapper->add('isSterilized');
+        $showMapper->add('specialSign');
         $showMapper->add('image', null, array('template' =>'KittyAdmin/KittyShowField.html.twig'));
     }
 
     public function getExportFields()
     {
-        return array('name', 'birthday','image','race');
+        return array('name', 'birthday','image', 'isSterilized', 'specialSign', 'race');
     }
 }

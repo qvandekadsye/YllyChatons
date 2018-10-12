@@ -30,6 +30,12 @@ class Race
     protected $raceName = '';
 
     /**
+     * @ORM\Column(type="string", nullable=true, length=255)
+     * @var string
+     */
+    protected $weight;
+
+    /**
      * @ORM\OneToMany(targetEntity="Kitty", cascade={"persist","remove"},mappedBy="race")
      */
     protected $kitties;
@@ -57,6 +63,24 @@ class Race
     {
         $this->raceName = $raceName;
     }
+
+    /**
+     * @return string
+     */
+    public function getWeight(): ?string
+    {
+        return $this->weight;
+    }
+
+    /**
+     * @param string $weight
+     */
+    public function setWeight(string $weight): void
+    {
+        $this->weight = $weight;
+    }
+
+
 
     public function __toString()
     {

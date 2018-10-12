@@ -188,3 +188,7 @@ lexik_jwt_authentication:
     token_ttl:        3600
 
 
+doctrine_migrations:
+    dir_name: '%kernel.project_dir%/src/AppBundle/Migrations'
+    namespace: AppBundle\Migrations
+    table_name: 'migration_versions'

@@ -15,17 +15,21 @@ class RaceAdmin extends AbstractAdmin
 {
     protected function configureFormFields(FormMapper $form)
     {
-        $form->add("RaceName", TextType::class, array('required' => true));
+        $form
+            ->add("RaceName", TextType::class, array('required' => true))
+            ->add('weight', TextType::class);
     }
 
     protected function configureListFields(ListMapper $list)
     {
-        $list->addIdentifier('id')
+        $list
+            ->addIdentifier('id')
             ->addIdentifier('raceName', null, [
                 'route' => [
                     'name' => 'show'
                 ]
-        ]);
+        ])
+            ->addIdentifier('weight');
     }
 
     protected function configureDatagridFilters(DatagridMapper $datagridMapper)
@@ -41,5 +45,6 @@ class RaceAdmin extends AbstractAdmin
     protected function configureShowFields(ShowMapper $showMapper)
     {
         $showMapper->add('raceName');
+        $showMapper->add('weight');
     }
 }

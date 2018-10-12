@@ -20,7 +20,8 @@ framework:
     form: ~
     csrf_protection: ~
     validation: { enable_annotations: true }
-    #serializer: { enable_annotations: true }
+    serializer:
+        enabled: false
     default_locale: '%locale%'
     trusted_hosts: ~
     session:
@@ -177,6 +178,8 @@ fos_rest:
         enabled: true
     body_converter:
         enabled: true
+    serializer:
+        serialize_null:  false
 
 
 nelmio_api_doc: ~
@@ -192,3 +195,9 @@ doctrine_migrations:
     dir_name: '%kernel.project_dir%/src/AppBundle/Migrations'
     namespace: AppBundle\Migrations
     table_name: 'migration_versions'
+
+jms_serializer:
+    handlers:
+        datetime:
+            default_format: "Y-m-d\\TH:i:sP"
+            default_timezone: "UTC"

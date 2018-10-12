@@ -4,6 +4,7 @@ namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use JMS\Serializer\Annotation as Serializer;
 
 /**
  * Class Kitty
@@ -19,12 +20,14 @@ class Kitty
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      * @var integer
+     * @Serializer\Groups({"Kitty"})
      */
     protected $id;
 
     /**
      * @ORM\Column(name="name", type="string",nullable=false,length=255)
      * @var string
+     * @Serializer\Groups({"Kitty"})
      */
     protected $name = "";
     /**

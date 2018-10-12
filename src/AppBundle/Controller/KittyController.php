@@ -29,7 +29,7 @@ class KittyController extends Controller
     /**
      * @param ParamFetcher $paramFetcher
      * @return array
-     * @Rest\View()
+     * @Rest\View(serializerGroups={"Kitty"})
      * @Rest\Get("/api/kitties")
      * @Rest\QueryParam(name="page", nullable=true, default=1,requirements="\d+", description="Définit la page")
      * @Rest\QueryParam(name="perPage", nullable=true, default="2", requirements="\d+", description="Definit le nombre de chat par page")

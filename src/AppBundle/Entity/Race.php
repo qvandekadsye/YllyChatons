@@ -5,6 +5,7 @@ namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use JMS\Serializer\Annotation as Serializer;
 
 /**
  * Class Race
@@ -20,18 +21,21 @@ class Race
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      * @var integer
+     * @Serializer\Groups({"Kitty","User"})
      */
     protected $id;
     /**
      * @ORM\Column(type="string", nullable=false, length=255)
      * @var string
      * @Assert\NotNull()
+     * @Serializer\Groups({"Kitty","User"})
      */
     protected $raceName = '';
 
     /**
      * @ORM\Column(type="string", nullable=true, length=255)
      * @var string
+     * @Serializer\Groups({"Kitty","User"})
      */
     protected $weight;
 

@@ -4,6 +4,7 @@ namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use JMS\Serializer\Annotation as Serializer;
 
 /**
  * Class Kitty
@@ -19,25 +20,43 @@ class Kitty
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      * @var integer
+     * @Serializer\Groups({"Kitty","Anon","User"})
      */
     protected $id;
 
     /**
      * @ORM\Column(name="name", type="string",nullable=false,length=255)
      * @var string
+     * @Serializer\Groups({"Kitty","Anon","User"})
      */
-    protected $name ="";
+    protected $name = "";
     /**
      * @ORM\Column(name="birthday",nullable=false, type="date")
      * @var /Date
      * @Assert\NotNull()
      * @Assert\Date()
+     * @Serializer\Groups({"Kitty","User"})
      */
     protected $birthday;
 
     /**
+     * @var boolean
+     * @ORM\Column(name="issterilized", nullable=false, type="boolean", options={"default" : 0} )
+     * @Serializer\Groups({"Kitty","User"})
+     */
+    protected $isSterilized = '';
+
+    /**
+     * @var string
+     * @ORM\Column(name="specialSign", nullable=true, type="text")
+     * @Serializer\Groups({"Kitty","User"})
+     */
+    protected $specialSign;
+
+    /**
      * @ORM\OneToOne(targetEntity="\Application\Sonata\MediaBundle\Entity\Media", cascade={"persist"}, fetch="LAZY")
      * @var \Application\Sonata\MediaBundle\Entity\Media
+     * @Serializer\Groups({"Kitty","User"})
      */
     protected $image;
 
@@ -47,6 +66,7 @@ class Kitty
      * @ORM\JoinColumn(name="race_id", referencedColumnName="id", nullable=false)
      * @var Race
      * @Assert\NotNull()
+     * @Serializer\Groups({"Kitty","User"})
      */
     protected $race;
 
@@ -90,6 +110,40 @@ class Kitty
     {
         $this->birthday = $birthday;
     }
+
+    /**
+     * @return bool
+     */
+    public function isSterilized(): bool
+    {
+        return $this->isSterilized;
+    }
+
+    /**
+     * @param bool $isSterilized
+     */
+    public function setIsSterilized(bool $isSterilized): void
+    {
+        $this->isSterilized = $isSterilized;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSpecialSign(): ?string
+    {
+        return $this->specialSign;
+    }
+
+    /**
+     * @param string $specialSign
+     */
+    public function setSpecialSign(string $specialSign): void
+    {
+        $this->specialSign = $specialSign;
+    }
+
+
 
     /**
      * @return \Application\Sonata\MediaBundle\Entity\Media

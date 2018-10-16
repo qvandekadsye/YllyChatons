@@ -5,9 +5,11 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Kitty;
 use AppBundle\Form\KittyType;
+use FOS\RestBundle\Context\Context;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Request\ParamFetcher;
 use AppBundle\FormHandler\KittyFormHandler;
+use FOS\RestBundle\View\View;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -19,8 +21,9 @@ use Symfony\Component\Security\Core\Security;
 class KittyController extends Controller
 {
     protected $securityChecker;
+    protected $serializer;
 
-    public function __construct( Security $securityChecker)
+    public function __construct(Security $securityChecker)
     {
         $this->securityChecker = $securityChecker;
     }
@@ -28,8 +31,7 @@ class KittyController extends Controller
 
     /**
      * @param ParamFetcher $paramFetcher
-     * @return array
-     * @Rest\View()
+     * @return View
      * @Rest\Get("/api/kitties")
      * @Rest\QueryParam(name="page", nullable=true, default=1,requirements="\d+", description="Définit la page")
      * @Rest\QueryParam(name="perPage", nullable=true, default="2", requirements="\d+", description="Definit le nombre de chat par page")
@@ -41,14 +43,23 @@ class KittyController extends Controller
         $maxResult = $paramFetcher->get('perPage');
         $kittyNumber = $kittyRepository->countAllKitties();
         $numberOfPage = ceil($kittyNumber/$maxResult);
+        $kitties = $kittyRepository->findKittiesByPage($paramFetcher->get('page'), $maxResult);
+        $context = new Context();
         if ($this->securityChecker->getToken() && $this->securityChecker->isGranted('ROLE_USER')) {
-            $kitties = $kittyRepository->findKittiesByPage($paramFetcher->get('page'), $maxResult);
+            $context->addGroups(array('User', "sonata_api_read"));
         } else {
-            $kitties = $kittyRepository->findKittiesNameByPage($paramFetcher->get('page'), $maxResult);
+            $context->addGroup('Anon');
         }
 
         $data = array('data' => $kitties, 'meta' => array('pageNumber' =>$numberOfPage, 'perPage' =>$maxResult));//Test
-        return $data;
+        $view = new View();
+
+
+        $view
+            ->setData($data)
+            ->setStatusCode(Response::HTTP_OK)
+            ->setContext($context);
+        return $view;
     }
 
     /**
@@ -154,7 +165,6 @@ class KittyController extends Controller
         $kittyForm = $this->createForm(KittyType::class, $newKitty);
         $formHandler = new KittyFormHandler($kittyForm, $entityManager, $request);
         return $formHandler->processPost($newKitty);
-
     }
 
     /**

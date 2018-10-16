@@ -10,7 +10,9 @@ use Sonata\MediaBundle\Form\Type\MediaType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\BirthdayType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -23,6 +25,8 @@ class KittyType extends AbstractType
             ->add('name', TextType::class, array('required' =>true))
             ->add('birthday', BirthdayType::class, array('required' =>true))
             ->add('image', MediaType::class, array('required' => false, 'provider' => 'sonata.media.provider.image', 'context' => 'default'))
+            ->add('iSterilized', CheckboxType::class)
+            ->add('specialSign', TextareaType::class)
             ->add('race', EntityType::class, array('class' => Race::class, 'required' => true))
             ->add("Envoyer", SubmitType::class);
     }

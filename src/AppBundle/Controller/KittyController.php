@@ -169,6 +169,7 @@ class KittyController extends Controller
 
     /**
      * @param Kitty $kitty
+     * @param Request $request
      * @return Kitty|null|object|\Symfony\Component\Form\FormInterface|JsonResponse
      * @Rest\View(statusCode=Response::HTTP_OK)
      * @Rest\Put("/api/kitties/{id}")
@@ -211,11 +212,11 @@ class KittyController extends Controller
      *   }
      *     })
      */
-    public function updateKittyAction(Kitty $kitty)
+    public function updateKittyAction(Kitty $kitty, Request $request)
     {
         $entityManager = $this->get('doctrine')->getManager();
         $kittyForm = $this->createForm(KittyType::class, $kitty);
-        $kittyFormHandler = new KittyFormHandler($kittyForm, $entityManager, null);
+        $kittyFormHandler = new KittyFormHandler($kittyForm, $entityManager, $request);
         return $kittyFormHandler->processPost($kitty);
     }
 }

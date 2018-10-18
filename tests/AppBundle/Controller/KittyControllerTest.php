@@ -126,7 +126,8 @@ class KittyControllerTest extends WebTestCase
         $multipartData =  [
             ['name' => 'name', 'contents' => 'testPost'], ['name' => 'birthday[year]', 'contents' => '2018'],
             ['name' => 'birthday[month]', 'contents' => '2'], ['name' => 'birthday[day]', 'contents' => '1'],
-            ['name' => 'race', 'contents' =>10]
+            ['name' => 'race', 'contents' =>10], ['name' => 'isSterilized', 'contents' =>true],
+            ['name' => 'specialSign', 'contents' =>"Une tache rayé sur la tête"],
 
         ];
 
@@ -188,9 +189,9 @@ class KittyControllerTest extends WebTestCase
     public function testPutKitty()
     {
         $formparamdata =  [
-            ['name' => 'name', 'contents' => 'coconut'], ['name' => 'birthday[year]', 'contents' => '2018'],
-            ['name' => 'birthday[month]', 'contents' => '3'], ['name' => 'birthday[day]', 'contents' => '1'],
-            ['name' => 'race', 'contents' =>10]
+            ['name' => 'name', 'contents' => 'testPost'],
+            
+
             ];
 
         $token = $this->getAPIToken('unit', "unit");

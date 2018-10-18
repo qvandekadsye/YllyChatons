@@ -25,7 +25,7 @@ class KittyType extends AbstractType
             ->add('name', TextType::class, array('required' =>true))
             ->add('birthday', BirthdayType::class, array('required' =>true))
             ->add('image', MediaType::class, array('required' => false, 'provider' => 'sonata.media.provider.image', 'context' => 'default'))
-            ->add('iSterilized', CheckboxType::class)
+            ->add('isSterilized', CheckboxType::class)
             ->add('specialSign', TextareaType::class)
             ->add('race', EntityType::class, array('class' => Race::class, 'required' => true))
             ->add("Envoyer", SubmitType::class);

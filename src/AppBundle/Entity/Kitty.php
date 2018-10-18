@@ -51,7 +51,7 @@ class Kitty
      * @ORM\Column(name="specialSign", nullable=true, type="text")
      * @Serializer\Groups({"Kitty","User"})
      */
-    protected $specialSign;
+    protected $specialSign ='';
 
     /**
      * @ORM\OneToOne(targetEntity="\Application\Sonata\MediaBundle\Entity\Media", cascade={"persist"}, fetch="LAZY")

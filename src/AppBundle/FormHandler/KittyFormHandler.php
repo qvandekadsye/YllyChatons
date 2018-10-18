@@ -40,7 +40,7 @@ class KittyFormHandler
 
     public function processPut(Kitty $kitty)
     {
-        $this->kittyForm->submit($kitty, false); // Validation des données
+        $this->kittyForm->submit($this->request->request->all(), false); // Validation des données
         if ($this->kittyForm->isValid()) {
             $this->entityManager->flush();
             return $kitty;

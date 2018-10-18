@@ -7,11 +7,10 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class KittyControllerTest extends WebTestCase
 {
-
     private function getAPIToken($user, $password)
     {
         $guzzle = new GuzzleClient(array('base_uri' => 'http://ylly.local/app_test.php/api/'));
-        $response = $guzzle->post('login_check',array('json' => array('username' => $user, 'password' => $password)));
+        $response = $guzzle->post('login_check', array('json' => array('username' => $user, 'password' => $password)));
         return json_decode($response->getBody()->getContents())->token;
     }
 
@@ -86,16 +85,13 @@ class KittyControllerTest extends WebTestCase
      */
     public function testDeleteKittyNotFound()
     {
-
-        $token = $this->getAPIToken('unit',"unit");
+        $token = $this->getAPIToken('unit', "unit");
         $headers = array(
             'Authorization' => 'Bearer ' . $token,
             'Accept'        => 'application/json',
         );
         $guzzle = new GuzzleClient(array('base_uri' => 'http://ylly.local/app_test.php/api/'));
         $response = $guzzle->delete('kitties/0', array('headers' => $headers));
-
-
     }
 
     /**
@@ -104,16 +100,110 @@ class KittyControllerTest extends WebTestCase
      */
     public function testDeleteKitty()
     {
-        $token = $this->getAPIToken('unit',"unit");
+        $token = $this->getAPIToken('unit', "unit");
         $headers = array(
             'Authorization' => 'Bearer ' . $token,
             'Accept'        => 'application/json',
         );
         $guzzle = new GuzzleClient(array('base_uri' => 'http://ylly.local/app_test.php/api/'));
-        $response = $guzzle->delete('kitties/3',array('headers' => $headers));
-        $this->assertEquals(204,$response->getStatusCode(),"La réponse doit être 204 no content");
-        $guzzle->get('kitties/3',array('headers' => $headers));
+        $response = $guzzle->delete('kitties/8', array('headers' => $headers));
+        $this->assertEquals(204, $response->getStatusCode(), "La réponse doit être 204 no content");
+        $guzzle->get('kitties/8', array('headers' => $headers));
+    }
+
+    /**
+     * @expectedException \GuzzleHttp\Exception\BadResponseException
+     * @expectedExceptionCode 401
+     */
+    public function testPostKittyAnon()
+    {
+        $guzzle = new GuzzleClient(array('base_uri' => 'http://ylly.local/app_test.php/api/'));
+        $response = $guzzle->post('kitties');
+    }
+
+    public function testPostKitty()
+    {
+        $multipartData =  [
+            ['name' => 'name', 'contents' => 'testPost'], ['name' => 'birthday[year]', 'contents' => '2018'],
+            ['name' => 'birthday[month]', 'contents' => '2'], ['name' => 'birthday[day]', 'contents' => '1'],
+            ['name' => 'race', 'contents' =>10]
+
+        ];
+
+        $token = $this->getAPIToken('unit', "unit");
+        $headers = array(
+            'Authorization' => 'Bearer ' . $token,
+            'Accept'        => 'application/json'
+        );
+
+        $guzzle = new GuzzleClient(array('base_uri' => 'http://ylly.local/app_test.php/api/'));
+        $response = $guzzle->post('kitties', array('multipart' => $multipartData,'headers' => $headers));
+        $kitty = json_decode($response, true);
+        $id = $kitty->id;
+        $response  = $guzzle->get('kitties/'.$id, array('headers' => $headers));
+        $this->assertEquals(201, $response->getStatusCode());
+    }
+
+    /**
+     * @expectedException \GuzzleHttp\Exception\BadResponseException
+     * @expectedExceptionCode 405
+     */
+    public function TestPupKittyMethodNotAllowed()
+    {
+        $token = $this->getAPIToken('unit', "unit");
+        $headers = array(
+            'Authorization' => 'Bearer ' . $token,
+            'Accept'        => 'application/json'
+        );
+        $guzzle = new GuzzleClient(array('base_uri' => 'http://ylly.local/app_test.php/api/'));
+        $response = $guzzle->put('kitties', array('headers' => $headers));
     }
 
 
+    /**
+     * @expectedException \GuzzleHttp\Exception\BadResponseException
+     * @expectedExceptionCode 401
+     */
+    public function testPutKittyAnon()
+    {
+        $guzzle = new GuzzleClient(array('base_uri' => 'http://ylly.local/app_test.php/api/'));
+        $response = $guzzle->put('kitties/10');
+    }
+
+    /**
+     * @expectedException \GuzzleHttp\Exception\BadResponseException
+     * @expectedExceptionCode 404
+     */
+    public function testPutKittyNotFound()
+    {
+        $token = $this->getAPIToken('unit', "unit");
+        $headers = array(
+            'Authorization' => 'Bearer ' . $token,
+            'Accept'        => 'application/json',
+        );
+        $guzzle = new GuzzleClient(array('base_uri' => 'http://ylly.local/app_test.php/api/'));
+        $response = $guzzle->put('kitties/0', array('headers' => $headers));
+    }
+
+    public function testPutKitty()
+    {
+        $formparamdata =  [
+            ['name' => 'name', 'contents' => 'coconut'], ['name' => 'birthday[year]', 'contents' => '2018'],
+            ['name' => 'birthday[month]', 'contents' => '3'], ['name' => 'birthday[day]', 'contents' => '1'],
+            ['name' => 'race', 'contents' =>10]
+            ];
+
+        $token = $this->getAPIToken('unit', "unit");
+        $headers = array(
+            'Authorization' => 'Bearer ' . $token,
+            'Accept'        => 'application/json'
+        );
+
+        $guzzle = new GuzzleClient(array('base_uri' => 'http://ylly.local/app_test.php/api/'));
+        $response = $guzzle->put('kitties/20', array('form_params' => $formparamdata,'headers' => $headers));
+        $kitty = json_decode($response, true);
+        //$id = $kitty->id;
+        $response  = $guzzle->get('kitties/10', array('headers' => $headers));
+        $this->assertEquals(200, $response->getStatusCode());
+    }
 }

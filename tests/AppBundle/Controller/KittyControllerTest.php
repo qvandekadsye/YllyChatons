@@ -2,10 +2,20 @@
 
 namespace Tests\AppBundle\Controller;
 
+use GuzzleHttp\Client as GuzzleClient;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class KittyControllerTest extends WebTestCase
 {
+
+    private function getAPIToken($user, $password)
+    {
+        $guzzle = new GuzzleClient(array('base_uri' => 'http://ylly.local/app_test.php/api/'));
+        $response = $guzzle->post('login_check',array('json' => array('username' => $user, 'password' => $password)));
+        return json_decode($response->getBody()->getContents())->token;
+    }
+
+
     public function testPerPageParameter()
     {
         $client = static::createClient();
@@ -58,4 +68,52 @@ class KittyControllerTest extends WebTestCase
             $this->assertFalse(property_exists($kitty, 'specialSign'));
         }
     }
+
+    /**
+     * @expectedException \GuzzleHttp\Exception\BadResponseException
+     * @expectedExceptionCode 401
+     */
+    public function testDeleteKittyAnon()
+    {
+        $guzzle = new GuzzleClient(array('base_uri' => 'http://ylly.local/app_test.php/api/'));
+        $response = $guzzle->delete('kitties/0');
+    }
+
+
+    /**
+     * @expectedException \GuzzleHttp\Exception\BadResponseException
+     * @expectedExceptionCode 404
+     */
+    public function testDeleteKittyNotFound()
+    {
+
+        $token = $this->getAPIToken('unit',"unit");
+        $headers = array(
+            'Authorization' => 'Bearer ' . $token,
+            'Accept'        => 'application/json',
+        );
+        $guzzle = new GuzzleClient(array('base_uri' => 'http://ylly.local/app_test.php/api/'));
+        $response = $guzzle->delete('kitties/0', array('headers' => $headers));
+
+
+    }
+
+    /**
+     * @expectedException \GuzzleHttp\Exception\BadResponseException
+     * @expectedExceptionCode 404
+     */
+    public function testDeleteKitty()
+    {
+        $token = $this->getAPIToken('unit',"unit");
+        $headers = array(
+            'Authorization' => 'Bearer ' . $token,
+            'Accept'        => 'application/json',
+        );
+        $guzzle = new GuzzleClient(array('base_uri' => 'http://ylly.local/app_test.php/api/'));
+        $response = $guzzle->delete('kitties/3',array('headers' => $headers));
+        $this->assertEquals(204,$response->getStatusCode(),"La réponse doit être 204 no content");
+        $guzzle->get('kitties/3',array('headers' => $headers));
+    }
+
+
 }

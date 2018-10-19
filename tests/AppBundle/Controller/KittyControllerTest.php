@@ -3,6 +3,7 @@
 namespace Tests\AppBundle\Controller;
 
 use GuzzleHttp\Client as GuzzleClient;
+use GuzzleHttp\Exception\ClientException;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class KittyControllerTest extends WebTestCase
@@ -188,22 +189,21 @@ class KittyControllerTest extends WebTestCase
 
     public function testPutKitty()
     {
-        $formparamdata =  [
-            ['name' => 'name', 'contents' => 'testPost'],
-            
-
-            ];
+        $formparamdata = array(
+                'name' => 'testRéussi',
+                'birthday' => array('year' => 2018, 'month' => 12, 'day' => 25),
+                'race' => 61,
+                'isSterilized' => true,
+                'specialSign' => "dispose d'une clochette bleue"
+            );
 
         $token = $this->getAPIToken('unit', "unit");
         $headers = array(
             'Authorization' => 'Bearer ' . $token,
             'Accept'        => 'application/json'
         );
-
         $guzzle = new GuzzleClient(array('base_uri' => 'http://ylly.local/app_test.php/api/'));
         $response = $guzzle->put('kitties/20', array('form_params' => $formparamdata,'headers' => $headers));
-        $kitty = json_decode($response, true);
-        //$id = $kitty->id;
         $response  = $guzzle->get('kitties/10', array('headers' => $headers));
         $this->assertEquals(200, $response->getStatusCode());
     }

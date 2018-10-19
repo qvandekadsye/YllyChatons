@@ -93,6 +93,47 @@ class FeatureContext implements Context
         throw new PendingException();
     }
 
+    /**
+     * @When I make a POST Request to :arg1
+     */
+    public function iMakeAPostRequestTo($arg1)
+    {
+        throw new PendingException();
+    }
+
+    /**
+     * @When With bad informations
+     */
+    public function withBadInformations()
+    {
+        throw new PendingException();
+    }
+
+    /**
+     * @When With good informations
+     */
+    public function withGoodInformations()
+    {
+        throw new PendingException();
+    }
+
+    /**
+     * @Then I shall have a :arg1 status code
+     */
+    public function iShallHaveAStatusCode($arg1)
+    {
+        throw new PendingException();
+    }
+
+    /**
+     * @Then I Shall have the new kitty as response
+     */
+    public function iShallHaveTheNewKittyAsResponse()
+    {
+        throw new PendingException();
+    }
+
+
 
 
 }

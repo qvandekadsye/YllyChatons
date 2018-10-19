@@ -204,7 +204,7 @@ class KittyControllerTest extends WebTestCase
         );
         $guzzle = new GuzzleClient(array('base_uri' => 'http://ylly.local/app_test.php/api/'));
         $response = $guzzle->put('kitties/20', array('form_params' => $formparamdata,'headers' => $headers));
-        $response  = $guzzle->get('kitties/10', array('headers' => $headers));
+        $response  = $guzzle->get('kitties/20', array('headers' => $headers));
         $this->assertEquals(200, $response->getStatusCode());
     }
 }
